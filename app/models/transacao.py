@@ -1,5 +1,6 @@
 from ..config import database
 from datetime import datetime
+from sqlalchemy.orm import validates
 
 class TransacaoModel(database.Model):
     __tablename__ = 'transacao'
@@ -23,8 +24,16 @@ class TransacaoModel(database.Model):
             'descricao': self.descricao,
             'realizada_em': self.realizada_em
         }
-        
+
+    # @validates('descricao')
+    # def validateDescricao(self, key, value):
+        # if len(value) > 10:
+            # raise CledsError('{} maior que 10 caracteres'.format(key))
+        # return value
+    
     @classmethod
     def getAllByClientID(cls, client_id, limit=None):
         return cls.query.filter_by(cliente = client_id).limit(limit)
     
+class CledsError(Exception):
+    pass

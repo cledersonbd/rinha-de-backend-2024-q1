@@ -1,4 +1,4 @@
-FROM --platform=amd64 mysql:8.3.0
+FROM mysql:8.3.0
 
 ENV MYSQL_ROOT_PASSWORD="123456"
 ENV MYSQL_PORT=3433

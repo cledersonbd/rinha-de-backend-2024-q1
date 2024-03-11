@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from .models.cliente import ClienteModel
-from .models.transacao import TransacaoModel
+from .models.transacao import TransacaoModel, CledsError
 from datetime import datetime
 
 clientes_bp = Blueprint(
@@ -57,12 +57,13 @@ def post(id):
     
     transacao = TransacaoModel(**data, cliente=cliente.id)
     try:
+        if transacao.descricao is None or len(transacao.descricao) > 10 or len(transacao.descricao) < 1:
+            return  {'message': 'Erro de validação'}, 422
         if cliente.updateSaldo(transacao):
             transacao.save()
             cliente.save()
         else:
             return {'message': 'Operação fora do limite do cliente'}, 422
-        
     except Exception as error:
         return  {'message': 'Deu merda braba: {}'.format(error.__str__())}, 500
     

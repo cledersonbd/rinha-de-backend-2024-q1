@@ -1,4 +1,4 @@
-FROM --platform=amd64 python:3.12-alpine3.19
+FROM python:3.12-alpine3.19
 
 # ENV FLASK_RUN_PORT=8000
 ENV FLASK_RUN_HOST="0.0.0.0"

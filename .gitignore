@@ -1,3 +1,10 @@
+### MacOS ###
+.DS_Store
+
+### my-project ###
+db-data/
+load-test/results
+
 ### Flask ###
 instance/*
 !instance/.gitignore

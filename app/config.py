@@ -1,11 +1,15 @@
 import os 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.pool import QueuePool
 
 database = SQLAlchemy()
 
 class Config():
     SECRET_KEY='dev'
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_size': 30
+    }
     
 class DevConfig(Config):
     DB_URL='db'
