@@ -3,7 +3,7 @@
 
 ### my-project ###
 db-data/
-load-test/results
+load-test/user-files/results*
 
 ### Flask ###
 instance/*
