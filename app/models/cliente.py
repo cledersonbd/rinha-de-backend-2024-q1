@@ -8,13 +8,6 @@ class ClienteModel(database.Model):
     nome = database.Column(database.String)
     limite = database.Column(database.Integer)
     saldo = database.Column(database.Integer)
-    
-    # def __init__(self, id=id, nome=nome, limite=limite, saldo=saldo) -> None:
-    #     super().__init__()
-    #     self.id = id
-    #     self.nome = nome
-    #     self.limite = limite
-    #     self.saldo = saldo
         
     def toJSON(self):
         return {

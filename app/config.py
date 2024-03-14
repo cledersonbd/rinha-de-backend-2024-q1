@@ -8,7 +8,7 @@ class Config():
     SECRET_KEY='dev'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
-        'pool_size': 30
+        'pool_size': 30 # increasing the standard pool connecttions from 10 to 30
     }
     
 class DevConfig(Config):

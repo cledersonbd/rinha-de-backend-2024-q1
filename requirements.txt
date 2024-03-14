@@ -1,5 +1,4 @@
 flask
 Flask-Restful
-flask_jwt_extended
 flask_sqlalchemy
 psycopg2-binary

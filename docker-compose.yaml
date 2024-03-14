@@ -3,7 +3,8 @@ version: '3'
 
 services:
   api01: &api
-    # image: rinha-cledersonbd-app:latest
+    # platform: linux/amd64
+    # image: clederson/rinha-app:latest
     build: ./
     volumes:
       - ./:/srv
@@ -27,7 +28,6 @@ services:
       - api01
       - api02
     ports:
-        # Obrigatório expor/usar a porta 9999 no load balancer!
       - "9999:9999"
     deploy:
       resources:

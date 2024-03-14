@@ -8,15 +8,12 @@ clientes_bp = Blueprint(
     __name__
 )
 
-@clientes_bp.route('/', endpoint='teste0')
+@clientes_bp.route('/', endpoint='rootGET')
 def getClientes():
     return jsonify([item.toJSON() for item in ClienteModel.findAll()])
     
-@clientes_bp.route('/', methods=['POST'], endpoint='teste1')
+@clientes_bp.route('/', methods=['POST'], endpoint='rootPOST')
 def post():
-    # if id is None:
-    #     return {'message': 'Requisição incorreta- - ID inválido'}, 400
-    
     data = request.json
     if data is None:
         return {'message': 'Requisição incorreta - Dados inválidos'}, 400
@@ -29,7 +26,7 @@ def post():
         return {'message': error.__str__()}, 500
     
 
-@clientes_bp.route('/<id>/extrato', endpoint='teste2')
+@clientes_bp.route('/<id>/extrato', endpoint='extract')
 def get(id=None):
     if id:
         cliente = ClienteModel.findById(id)
@@ -45,7 +42,7 @@ def get(id=None):
         'ultimas_transacoes': [item.toJSON() for item in TransacaoModel.getAllByClientID(cliente.id, limit=10)]
     }
 
-@clientes_bp.route('/<id>/transacoes', methods=['POST'])
+@clientes_bp.route('/<id>/transacoes', methods=['POST'], endpoint='transaction')
 def post(id):
     data = request.json
     if id is None:
@@ -55,15 +52,15 @@ def post(id):
     if cliente is None:
         return {'message': 'Cliente não encontrado'}, 404
     
-    transacao = TransacaoModel(**data, cliente=cliente.id)
     try:
-        if transacao.descricao is None or len(transacao.descricao) > 10 or len(transacao.descricao) < 1:
-            return  {'message': 'Erro de validação'}, 422
+        transacao = TransacaoModel(**data, cliente=cliente.id)            
         if cliente.updateSaldo(transacao):
             transacao.save()
             cliente.save()
         else:
             return {'message': 'Operação fora do limite do cliente'}, 422
+    except AssertionError as e:
+        return  {'message': 'Erro de validação: ' + e.__str__()}, 422
     except Exception as error:
         return  {'message': 'Deu merda braba: {}'.format(error.__str__())}, 500
     
@@ -71,9 +68,6 @@ def post(id):
         'limite': cliente.limite,
         'saldo' : cliente.saldo
     }
-    cliente = ClienteModel.findById(id)
-    if cliente:
-        return jsonify(cliente)
     
     
     

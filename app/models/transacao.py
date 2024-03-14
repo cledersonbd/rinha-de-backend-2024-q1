@@ -1,6 +1,7 @@
 from ..config import database
 from datetime import datetime
 from sqlalchemy.orm import validates
+from sqlalchemy import desc
 
 class TransacaoModel(database.Model):
     __tablename__ = 'transacao'
@@ -25,15 +26,28 @@ class TransacaoModel(database.Model):
             'realizada_em': self.realizada_em
         }
 
-    # @validates('descricao')
-    # def validateDescricao(self, key, value):
-        # if len(value) > 10:
-            # raise CledsError('{} maior que 10 caracteres'.format(key))
+    @validates('valor')
+    def validateValor(self, key, value):
         # return value
+        if value - int(value) == 0:
+            return value
+        raise AssertionError('Campo \'{}\' fora da especificacao'.format(key))
+    
+    @validates('tipo')
+    def validateDescricao(self, key, value):
+        if value in ['c', 'd']:
+            return value
+        raise AssertionError('Campo {} fora da especificacao'.format(key))
+    
+    @validates('descricao')
+    def validateDescricao(self, key, value):
+        if value and 1 < len(value) <= 10:
+            return value
+        raise AssertionError('Campo {} fora da especificacao'.format(key))
     
     @classmethod
     def getAllByClientID(cls, client_id, limit=None):
-        return cls.query.filter_by(cliente = client_id).limit(limit)
+        return cls.query.filter_by(cliente = client_id).order_by(desc(TransacaoModel.realizada_em)).limit(limit)
     
 class CledsError(Exception):
     pass
